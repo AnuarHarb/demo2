@@ -1,0 +1,94 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../shadycss/apply-shim.html">
+
+
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../polymer/lib/elements/dom-if.html">
+
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../paper-radio-button/paper-radio-button.html">
+
+
+<dom-module id="paper-dynamic-forms">
+    <template>
+        <style>
+            div {
+                --paper-dynamic-form-mixin: {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                };
+            }
+
+            .container {
+                color: var(--paper-dynamic-forms-color, #000000);
+                background-color: var(--paper-dynamic-forms-bg-color, transparent);
+                @apply --paper-dynamic-form-mixin;
+            }
+
+            paper-dropdown-menu {
+                --paper-dropdown-menu: {
+                    color: #000;
+                };
+            }
+
+            paper-input {
+                /* Label and underline color when the input is not focused */
+                --paper-input-container-color: black;
+                /* Label and underline color when the input is focused */
+                --paper-input-container-focus-color: black;
+                /* Label and underline color when the input is invalid */
+                --paper-input-container-invalid-color: red;
+                /* Input foreground color */
+                --paper-input-container-input-color: black;
+
+                --paper-input-container-label-focus: {
+                    color: #000000;
+                };
+                --paper-input-container-underline-focus: {
+                    border: 2px solid;
+                };
+            }
+
+        </style>
+        <div class="container">
+            <template is="dom-repeat" items="[[config]]">
+                <template is="dom-if" if="[[isTextForm(item)]]">
+                    <paper-input class="item" label="[[item.label]]" on-value-changed="textHandler"></paper-input>
+                </template>
+
+                <template is="dom-if" if="[[isOptionForm(item)]]">
+                    <paper-dropdown-menu label="[[item.label]]" on-value-changed="optionSelectedHandler">
+                        <paper-listbox slot="dropdown-content">
+                            <template is="dom-repeat" items="[[item.options]]" as="option">
+                                <paper-item class="item">[[option]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+                </template>
+
+                <template is="dom-if" if="[[isCheckboxForm(item)]]">
+                    <h3>[[item.label]]</h3>
+                    <template is="dom-repeat" items="[[item.options]]" as="option">
+                        <paper-checkbox class="item">[[option]]</paper-checkbox>
+                    </template>
+                </template>
+
+                <template is="dom-if" if="[[isRadioButtonForm(item)]]">
+                    <h3>[[sentence.label]]</h3>
+                    <paper-radio-group>
+                        <template is="dom-repeat" items="[[item.options]]" as="option">
+                            <paper-radio-button class="item" name="[[option]]">[[option]]</paper-radio-button>
+                        </template>
+                    </paper-radio-group>
+                </template>
+            </template>
+        </div>
+    </template>
+    <script src="./paper-dynamic-forms.js"></script>
+</dom-module>

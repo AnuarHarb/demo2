@@ -1,0 +1,28 @@
+{
+  "name": "credit-connection",
+  "description": "Connection for the credit ui component and the backend logic.",
+  "main": "credit-connection.html",
+  "version": "0.0.6",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#2.0.5"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  },
+  "homepage": "https://github.com/AnuarHarb/credit-connection",
+  "_release": "0.0.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.6",
+    "commit": "9f060489d181fde24ea8ad685102140b2d8a9e36"
+  },
+  "_source": "https://github.com/AnuarHarb/credit-connection.git",
+  "_target": "^0.0.6",
+  "_originalSource": "AnuarHarb/credit-connection"
+}

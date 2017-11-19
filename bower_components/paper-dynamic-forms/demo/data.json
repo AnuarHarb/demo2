@@ -1,0 +1,16 @@
+[
+  {
+    "label": "Input a label for your form field",
+    "type": "text-input"
+  },
+  {
+    "label": "Select a form type",
+    "type": "option-input",
+    "options": [
+      "text-input",
+      "option-input",
+      "checkbox-input",
+      "radio-button-input"
+    ]
+  }
+]

@@ -1,0 +1,197 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="../../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../../polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../paper-dynamic-forms.html">
+
+<dom-module id="demo-element">
+    <template>
+        <style is="custom-style" include="demo-pages-shared-styles">
+            div {
+                width: 100%;
+                margin-top: 30px;
+                border: 2px solid;
+                background-color: #F4F4F4;
+                padding: 30px;
+            }
+            h2,h3 {
+                font-family: sans-serif;
+            }
+            .create-button {
+                width: 70%;
+                height: 40px;
+                margin: 20px auto;
+                text-transform: uppercase;
+                font-size: 15px;
+                border-radius: 3px;
+                border: 1px solid black;
+                background-color: black;
+                color: white;
+            }
+            .create-button.active.focus,
+            .create-button.active:focus,
+            .create-button.focus,
+            .create-button.focus:active,
+            .create-button:active:focus,
+            .create-button:focus {
+                outline: 0 !important;
+                outline-offset: 0  !important;
+                background-image: none  !important;
+                -webkit-box-shadow: none !important;
+                box-shadow: none  !important;
+            }
+            .footer {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+            }
+        </style>
+
+        <iron-ajax
+                auto
+                url="data.json"
+                handle-as="json"
+                on-response="handleResponse"
+                debounce-duration="300"></iron-ajax>
+
+        <div class="vertical-section-container centered">
+            <h2>Your awesome form</h2>
+            <paper-dynamic-forms config="[[response]]"
+                                 on-option-input-response="handler"
+                                 on-text-input-response="handler">
+            </paper-dynamic-forms>
+
+            <template is="dom-if" if="[[hasOptions]]">
+                <paper-dynamic-forms config="[[options]]"
+                                     on-text-input-response="handler">
+                </paper-dynamic-forms>
+            </template>
+
+            <button class="create-button" on-tap="createField">Create form field</button>
+
+            <hr>
+            <paper-dynamic-forms
+                    config="[[sentences]]"></paper-dynamic-forms>
+            <h3 class="footer">Basic demo for paper-dynamic-forms</h3>
+        </div>
+    </template>
+
+    <script>
+        'use strict';
+        (function PaperDynamicFormsDefinition(customElements) {
+            /**
+             * `paper-dynamic-forms`
+             * This component gives a easy and comfortable way to magives a easy and comfortable way to make dynamics prohectske dynamics projects. E.g. polls
+             *
+             * @customElement
+             * @polymer
+             * @demo demo/index.html
+             */
+            class DemoElement extends Polymer.GestureEventListeners(Polymer.Element) {
+                static get is() {
+                    return 'demo-element';
+                }
+
+                static get properties()
+                {
+                    return {
+                        response: Object,
+                        sentence: {
+                            type: Object,
+                            value: {
+                                label: '',
+                                type: '',
+                                options: []
+                            }
+                        },
+                        optionA: String,
+                        optionB: String,
+                        optionC: String,
+                        optionD: String,
+                        sentences: {
+                            type: Array,
+                            value: []
+                        },
+                        hasOptions: {
+                            type: Boolean,
+                            value: false
+                        },
+                        options: {
+                            type: Array,
+                            value: [
+                                {
+                                    "label": "First option",
+                                    "type": "text-input"
+                                },
+                                {
+                                    "label": "Second option",
+                                    "type": "text-input"
+                                },
+                                {
+                                    "label": "Third option",
+                                    "type": "text-input"
+                                },
+                                {
+                                    "label": "Fourth option",
+                                    "type": "text-input"
+                                }
+                            ]
+                        }
+                    }
+                }
+
+                handleResponse(event)
+                {
+                    this.set('response', event.detail.response);
+                }
+
+                createField()
+                {
+                    this.push('sentence.options', this.optionA);
+                    this.push('sentence.options', this.optionB);
+                    this.push('sentence.options', this.optionC);
+                    this.push('sentence.options', this.optionD);
+                    this.push('sentences', this.sentence);
+                    this.set('sentence', {
+                        label: '',
+                        type: '',
+                        options: []
+                    });
+                }
+
+                handler(payload)
+                {
+                    switch (payload.detail.model.item.label) {
+                        case 'Select a form type':
+                            this.set('sentence.type', payload.detail.option);
+                            if(this.sentence.type !== 'text-input'){
+                                this.set('hasOptions', true);
+                            } else {
+                                this.set('hasOptions', false);
+                            }
+                            break;
+                        case 'Input a label for your form field':
+                            this.set('sentence.label', payload.detail.option);
+                            break;
+                        case 'First option':
+                            this.set('optionA', payload.detail.option);
+                            break;
+                        case 'Second option':
+                            this.set('optionB', payload.detail.option);
+                            break;
+                        case 'Third option':
+                            this.set('optionC', payload.detail.option);
+                            break;
+                        case 'Fourth option':
+                            this.set('optionD', payload.detail.option);
+                            break;
+
+                    }
+                }
+            }
+
+            customElements.define(DemoElement.is, DemoElement);
+        })(window.customElements);
+    </script>
+</dom-module>

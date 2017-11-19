@@ -1,0 +1,31 @@
+{
+  "name": "paper-dynamic-forms",
+  "version": "0.2.5",
+  "description": "[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/alfonsorios96/paper-dynamic-forms)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/wct",
+    "coverage": "open coverage/lcov-report/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alfonsorios96/paper-dynamic-forms.git"
+  },
+  "keywords": [
+    "polymer2",
+    "element"
+  ],
+  "author": "@alfonsorios96, @aldo.aldaco",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alfonsorios96/paper-dynamic-forms/issues"
+  },
+  "homepage": "https://github.com/alfonsorios96/paper-dynamic-forms#readme",
+  "devDependencies": {
+    "web-component-tester": "git+https://github.com/t2ym/web-component-tester.git#wct6-plugin",
+    "web-component-tester-istanbul": "git+https://github.com/t2ym/web-component-tester-istanbul.git#0.10.1-wct6.8"
+  }
+}

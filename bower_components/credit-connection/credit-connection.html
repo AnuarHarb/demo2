@@ -1,0 +1,137 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<dom-module id="credit-connection">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <h1>[[body.name]]</h1>
+    <iron-ajax id="creditAjax"
+      url="{{api}}"
+      method="[[method]]"
+      params="{{params}}"
+      body="{{body}}"
+      handle-as="json"
+      on-response="_handleResponse"
+        lastError="_handleError"
+      debounce-duration="300">
+    </iron-ajax>
+  </template>
+
+  <script>
+    (function(customElements) {
+      'use strict';
+      /**
+       * `credit-connection`
+       * Connection for the credit ui component and the backend logic.
+       *
+       * @customElement
+       * @polymer
+       * @demo demo/index.html
+       */
+      class CreditConnection extends Polymer.Element {
+        static get is() { return 'credit-connection'; }
+        static get properties() {
+          return {
+            api: {
+              type: String,
+              value: ""
+            },
+            params: {
+              type: Object,
+              value: {}
+            },
+            method: {
+              type: String,
+              value: 'POST'
+            },
+            body: {
+              type: Object,
+              value: {
+                firstName: 'anuar',
+                lastName: 'Harb',
+                creditType: 'personal',
+                monthlyIncome: '20000',
+                creditAmount: '10000',
+                timeToPay: 6
+              },
+            },
+            config: {
+              type: Object,
+              value: {
+                interest: .04,
+                salaryPayLimit: .03
+              }
+            }
+          };
+        }
+
+        generateRequest() {
+          if (this.api == "") {
+            this._creditAvailabilityCheck();
+          } else {
+            this.$.creditAjax.generateRequest();
+          }
+        }
+
+        _handleResponse(e) {
+          let resp = e.detail.response;
+          console.log('status', e.detail.status);
+          if (resp.succes === true) {
+            console.log('approved');
+            this.dispatchEvent(new CustomEvent('credit-approved', {
+              bubbles: true,
+              composed: true,
+              detail: resp
+            }));
+          } else {
+            console.log('not approved');
+            this.dispatchEvent(new CustomEvent('credit-denegate', {
+              bubbles: true,
+              composed: true,
+              detail: resp
+            }));
+          }
+        }
+
+        _handleError() {
+          this.dispatchEvent(new CustomEvent('error-request', {
+            bubbles: true,
+            composed: true,
+            detail: e.detail.status
+          }));
+        }
+
+        _creditAvailabilityCheck() {
+          let monthlyPayWithInterest = this._getCreditWithInterest();
+          let incomePayLimit = this._getIncomePayLimit();
+          if (incomePayLimit > monthlyPayWithInterest) {
+            let status = 'approved';
+            console.log('status', status);
+          } else {
+            let status = 'fail';
+            console.log('status', status);
+          }
+        }
+        _getCreditWithInterest() {
+          let creditWithInterest = this.body.creditAmount * (Number(this.config.interest) + 1);
+          let monthlyPayWithInterest = this._getMonthlyPayWithInterest(creditWithInterest);
+          return monthlyPayWithInterest;
+        }
+        _getMonthlyPayWithInterest(creditWithInterest) {
+          let monthlyPayWithInterest = creditWithInterest / this.body.timeToPay;
+          return monthlyPayWithInterest;
+        }
+        _getIncomePayLimit() {
+          let incomePayLimit = this.body.monthlyIncome * this.config.salaryPayLimit;
+          return incomePayLimit;
+        }
+      }
+      customElements.define(CreditConnection.is, CreditConnection);
+    })(window.customElements);
+  </script>
+</dom-module>
